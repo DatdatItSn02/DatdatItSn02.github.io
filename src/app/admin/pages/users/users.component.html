@@ -1,0 +1,182 @@
+<div class="wrapper">
+    <div class="row text-center" *ngIf="!Users.length">
+        <h1>Chưa có user nào!</h1>
+    </div>
+    <div class="container mt-5 justify-content-between">
+    <h1>Danh sách tài khoản</h1>
+    <button class="btn btn-success btn-lg" data-bs-toggle="modal" data-bs-target="#myAddUserModal">Thêm tài khoản</button>
+    </div>
+    <div class="row mt-3" *ngIf="Users.length">
+    <table class="cart-table table table-striped">
+    <thead class="table-dark">
+    <tr>
+        <td style="min-width: 70px; cursor: pointer;" (click)="orderByChange('id')">Mã user</td>
+        <td style="min-width: 70px; cursor: pointer;" (click)="orderByChange('username')">Tên tài khoản</td>
+        <td style="min-width: 70px; cursor: pointer;" (click)="orderByChange('password')">Mật khẩu</td>
+        <td style="min-width: 70px; cursor: pointer;" (click)="orderByChange('name')">Tên</td>
+        <td>Số điện thoại</td>
+        <td>Email</td>
+        <td style="min-width: 70px; cursor: pointer;" (click)="orderByChange('isAdmin')">Is Admin</td>
+        <td></td>
+        <td></td>
+    </tr>
+    </thead>
+    <tbody class="cart-table__body">
+    <tr *ngFor="let item of Users | orderBy: orderByType : orderByReverse ; let i = index">
+        <td>{{item.id}}</td>
+        <td>{{item.username}}</td>
+        <td>{{item.password}}</td>
+        <td>{{item.name}}</td>
+        <td>{{item.phone}}</td>
+        <td>{{item.email}}</td>
+        <td>{{item.isAdmin}}</td>
+        <td><button (click)="userUpdate(item,i)" data-bs-toggle="modal" data-bs-target="#myUpdateProductModal" class="btn btn-warning btn-lg">Sửa</button></td>
+        <td><button (click)="userDelete(i)" class="btn btn-danger btn-lg">Xóa</button></td>
+    </tr>
+    </tbody>
+    </table>
+    </div>
+    
+    <!-- The Add User Modal -->
+<div class="modal fade" id="myAddUserModal">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+  
+        <!-- Modal Header -->
+        <div class="modal-header text-center">
+          <h2 class="modal-title w-100">Thêm tài khoản</h2>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+  
+        <!-- Modal body -->
+        <div class="modal-body">
+            <form #frmAddUser="ngForm" (submit)="addUserSubmit(frmAddUser)" class="mx-1 mx-md-4">
+
+                <div class="d-flex flex-row align-items-center mb-4">
+                    <div class="form-outline flex-fill mb-0">
+                        <label class="form-label" for="usernameUser">Username</label>
+                      <input required name="username" type="text" [(ngModel)]="User.username" id="usernameUser" class="form-control" />
+                    </div>
+                  </div>
+                
+                <div class="d-flex flex-row align-items-center mb-4">
+                    <div class="form-outline flex-fill mb-0">
+                        <label class="form-label" for="passwordUser">password</label>
+                      <input required name="password" type="password"  [(ngModel)]="User.password" id="passwordUser" class="form-control" />
+                    </div>
+                </div>
+
+                <div class="d-flex flex-row align-items-center mb-4">
+                  <div class="form-outline flex-fill mb-0">
+                      <label class="form-label" for="nameUser">Name</label>
+                    <input required name="name" type="text" id="nameUser"  [(ngModel)]="User.name" class="form-control" />
+                  </div>
+                </div>
+
+                <div class="d-flex flex-row align-items-center mb-4">
+                  <div class="form-outline flex-fill mb-0">
+                      <label class="form-label" for="phoneUser">phone</label>
+                    <input required name="phone" type="text" id="phoneUser"  [(ngModel)]="User.phone" class="form-control" />
+                  </div>
+                </div>
+
+                <div class="d-flex flex-row align-items-center mb-4">
+                    <div class="form-outline flex-fill mb-0">
+                        <label class="form-label" for="emailUser">Email</label>
+                      <input required name="email" type="email" id="emailUser"  [(ngModel)]="User.email" class="form-control" />
+                    </div>
+                </div>
+                <div class="d-flex flex-row align-items-center mb-4">
+                    <div class="form-outline flex-fill mb-0">
+                        <label class="form-label" for="isadmin">Is Admin ?</label>
+                        <select class="form-select" [(ngModel)]="isAdmin" name="isAdmin" aria-label="Default select example">
+                            <option value="true">True</option>
+                            <option value="false">False</option>
+                          </select>
+                    </div>
+                </div>
+                <div class="form-button">
+                    <button class="btn btn-success mt-3" data-bs-dismiss="modal" type="submit"><b>Thêm tài khoản</b></button>
+                </div>
+              </form>
+        </div>
+  
+        <!-- Modal footer -->
+        <div class="modal-footer">
+          <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
+        </div>
+  
+      </div>
+    </div>
+</div>
+<!-- The UpdateProduct Modal -->
+<div class="modal fade" id="myUpdateProductModal">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+  
+        <div class="modal-header text-center">
+          <h2 class="modal-title w-100">Sửa tài khoản</h2>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+  
+        <div class="modal-body">
+            <form #frmUpdateUser="ngForm" (submit)="updateUserSubmit(frmUpdateUser)" class="mx-1 mx-md-4">
+                    <div class="d-flex flex-row align-items-center mb-4">
+                        <div class="form-outline flex-fill mb-0">
+                            <label class="form-label" for="usernameUser">Username</label>
+                          <input required name="username" type="text" [(ngModel)]="User.username" id="usernameUser" class="form-control" />
+                        </div>
+                      </div>
+                    
+                    <div class="d-flex flex-row align-items-center mb-4">
+                        <div class="form-outline flex-fill mb-0">
+                            <label class="form-label" for="passwordUser">password</label>
+                          <input required name="password" type="password"  [(ngModel)]="User.password" id="passwordUser" class="form-control" />
+                        </div>
+                    </div>
+    
+                    <div class="d-flex flex-row align-items-center mb-4">
+                      <div class="form-outline flex-fill mb-0">
+                          <label class="form-label" for="nameUser">Name</label>
+                        <input required name="name" type="text" id="nameUser"  [(ngModel)]="User.name" class="form-control" />
+                      </div>
+                    </div>
+    
+                    <div class="d-flex flex-row align-items-center mb-4">
+                      <div class="form-outline flex-fill mb-0">
+                          <label class="form-label" for="phoneUser">phone</label>
+                        <input required name="phone" type="text" id="phoneUser"  [(ngModel)]="User.phone" class="form-control" />
+                      </div>
+                    </div>
+    
+                    <div class="d-flex flex-row align-items-center mb-4">
+                        <div class="form-outline flex-fill mb-0">
+                            <label class="form-label" for="emailUser">Email</label>
+                          <input required name="email" type="email" id="emailUser"  [(ngModel)]="User.email" class="form-control" />
+                        </div>
+                    </div>
+                    <div class="d-flex flex-row align-items-center mb-4">
+                        <div class="form-outline flex-fill mb-0">
+                            <label class="form-label" for="isadmin">Is Admin ?</label>
+                            <select class="form-select" [(ngModel)]="isAdmin" name="isAdmin" aria-label="Default select example">
+                                <option value="true">True</option>
+                                <option value="false">False</option>
+                              </select>
+                        </div>
+                    </div>
+
+                    <div class="form-button">
+                        <button class="btn btn-warning mt-3" data-bs-dismiss="modal" type="submit"><b>Sửa sản phẩm</b></button>
+                    </div>
+              </form>
+        </div>
+  
+        <div class="modal-footer">
+          <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
+        </div>
+  
+      </div>
+    </div>
+</div>
+
+</div>
